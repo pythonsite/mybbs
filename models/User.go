@@ -44,3 +44,15 @@ func FindPermissionByUserIdAndPermissionName(userId int, name string) bool {
 	  "where u.id = ? and p.name = ?", userId, name).QueryRow(&permission)
 	return permission.Id > 0
 }
+
+func FindPermissionByUser(id int) []*Permission {
+	o := orm.NewOrm()
+	var permissions []*Permission
+	o.Raw("select p.* from permission p "+
+    "left join role_permissions rp on p.id = rp.permission_id "+
+    "left join role r on rp.role_id = r.id "+
+    "left join user_roles ur on r.id = ur.role_id "+
+    "left join user u on ur.user_id = u.id "+
+    "where u.id = ?", id).QueryRows(&permissions)
+  return permissions
+}

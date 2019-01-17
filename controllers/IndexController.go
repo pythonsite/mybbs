@@ -35,3 +35,18 @@ func (c *IndexController) About() {
 	c.Layout = "layout/layout.tpl"
 	c.TplName = "about.tpl"
 }
+
+// 登录页
+func (c *IndexController) LoginPage() {
+	IsLogin, _ := filters.IsLogin(c.Ctx)
+	if IsLogin {
+		c.Redirect("/", 302)
+	} else {
+		beego.ReadFromRequest(&c.Controller)
+		u := models.FindPermissionByUser(1)
+		beego.Debug(u)
+		c.Data["PageTitle"] = "登录"
+		c.Layout = "layout/layout.tpl"
+		c.TplName = "login.tpl"
+	}
+}
