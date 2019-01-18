@@ -33,6 +33,13 @@ func FindUserByToken(token string) (bool, User) {
 	return err != orm.ErrNoRows, user
 }
 
+func Login(username string) (bool, User) {
+	o := orm.NewOrm()
+	var user User
+	err := o.QueryTable(user).Filter("username", username).One(&user)
+	return err != orm.ErrNoRows, user
+}
+
 func FindPermissionByUserIdAndPermissionName(userId int, name string) bool {
 	o := orm.NewOrm()
 	var permission Permission

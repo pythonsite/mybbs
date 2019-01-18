@@ -1,12 +1,13 @@
 package utils
 
 import (
-	"github.com/astaxie/beego"
-	"time"
-	"github.com/xeonx/timeago"
-	"github.com/russross/blackfriday"
-	"mybbs/utils"
 	"mybbs/models"
+	"mybbs/utils"
+	"time"
+
+	"github.com/astaxie/beego"
+	"github.com/russross/blackfriday"
+	"github.com/xeonx/timeago"
 )
 
 func FormatTime(time time.Time) string {
@@ -22,7 +23,7 @@ func HasPermission(userId int, name string) bool {
 }
 
 func init() {
-	beego.AddFuncMap("timeage", FormatTime)
+	beego.AddFuncMap("timeago", FormatTime)
 	beego.AddFuncMap("markdown", MarkDown)
 	beego.AddFuncMap("haspermission", HasPermission)
 }
