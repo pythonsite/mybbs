@@ -1,6 +1,7 @@
 package models
 
 import (
+	"os/user"
 	"strconv"
 	"github.com/astaxie/beego/orm"
 	"time"
@@ -45,4 +46,13 @@ func PageTopic(p int, size int, section *Section) utils.Page {
 	qs.RelatedSel().OrderBy("InTime").Limit(size).Offset((p-1)*size).All(&list)
 	c, _ := strconv.Atoi(strconv.FormatInt(count, 10))
 	return utils.PageUtil(c, p, size, list)
+}
+
+func FindTopicByUser(user *User, limit int) []*Topic {
+	o := orm.NewOrm()
+	var topic Topic
+	var topics []*Topic
+	o.QueryTable(topic).RelatedSel().Filter("User", user).OrderBy("-LastReplyTime", "-InTime").Limit(limit).All(&topics)
+	return topics
+
 }

@@ -6,8 +6,8 @@ import (
 	"strconv"
 
 	"github.com/astaxie/beego"
-	"golang.org/x/crypto/bcrypt"
 	"github.com/sluu99/uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type IndexController struct {
@@ -84,7 +84,7 @@ func (c *IndexController) RegisterPage() {
 //验证注册页面
 func (c *IndexController) Register() {
 	flash := beego.NewFlash()
-	username,password := c.Input().Get("username"), c.Input().Get("password")
+	username, password := c.Input().Get("username"), c.Input().Get("password")
 	if len(username) == 0 || len(password) == 0 {
 		flash.Error("用户名或密码不能为空")
 		flash.Store(&c.Controller)
@@ -98,13 +98,19 @@ func (c *IndexController) Register() {
 		bcryptPassword, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 		user := models.User{
 			Username: username,
-			Password: string(bcryptPassword), 
-			Avatar: "/static/imgs/avatar.png",
-			Token: token,
+			Password: string(bcryptPassword),
+			Avatar:   "/static/imgs/avatar.png",
+			Token:    token,
 		}
 		models.SaveUser(&user)
 		c.SetSecureCookie(beego.AppConfig.String("cookie.secure"), beego.AppConfig.String("cookie.token"), token,
-		30*24*60*60, "/", beego.AppConfig.String("cookie.domain"), false, true)
+			30*24*60*60, "/", beego.AppConfig.String("cookie.domain"), false, true)
 		c.Redirect("/", 302)
 	}
+}
+
+// 登出
+func (c *IndexController) Logout() {
+	c.SetSecureCookie(beego.AppConfig.String("cookie.secure"), beego.AppConfig.String("cookie.token"), "", -1, "/", beego.AppConfig.String("cookie.domain"), false, true)
+	c.Redirect("/", 302)
 }
