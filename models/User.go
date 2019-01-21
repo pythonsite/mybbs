@@ -63,3 +63,16 @@ func FindPermissionByUser(id int) []*Permission {
     "where u.id = ?", id).QueryRows(&permissions)
   return permissions
 }
+
+func FindUserByUserName(username string) (bool, User) {
+	o := orm.NewOrm()
+	var user User
+	err := o.QueryTable(user).Filter("Username", username).One(&user)
+	return err != orm.ErrNoRows, user
+}
+
+func SaveUser(user *User) int64 {
+	o := orm.NewOrm()
+	id, _ := o.Insert(user)
+	return id
+}

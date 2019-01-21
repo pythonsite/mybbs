@@ -7,6 +7,7 @@ import (
 
 	"github.com/astaxie/beego"
 	"golang.org/x/crypto/bcrypt"
+	"github.com/sluu99/uuid"
 )
 
 type IndexController struct {
@@ -64,5 +65,46 @@ func (c *IndexController) Login() {
 		flash.Error("用户名或密码错误")
 		flash.Store(&c.Controller)
 		c.Redirect("/login", 302)
+	}
+}
+
+//注册页面
+func (c *IndexController) RegisterPage() {
+	isLogin, _ := filters.IsLogin(c.Ctx)
+	if isLogin {
+		c.Redirect("/", 302)
+	} else {
+		beego.ReadFromRequest(&c.Controller)
+		c.Data["PageTitle"] = "注册"
+		c.Layout = "layout/layout.tpl"
+		c.TplName = "register.tpl"
+	}
+}
+
+//验证注册页面
+func (c *IndexController) Register() {
+	flash := beego.NewFlash()
+	username,password := c.Input().Get("username"), c.Input().Get("password")
+	if len(username) == 0 || len(password) == 0 {
+		flash.Error("用户名或密码不能为空")
+		flash.Store(&c.Controller)
+		c.Redirect("/register", 302)
+	} else if flag, _ := models.FindUserByUserName(username); flag {
+		flash.Error("用户名已经被注册")
+		flash.Store(&c.Controller)
+		c.Redirect("/register", 302)
+	} else {
+		var token = uuid.Rand().Hex()
+		bcryptPassword, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+		user := models.User{
+			Username: username,
+			Password: string(bcryptPassword), 
+			Avatar: "/static/imgs/avatar.png",
+			Token: token,
+		}
+		models.SaveUser(&user)
+		c.SetSecureCookie(beego.AppConfig.String("cookie.secure"), beego.AppConfig.String("cookie.token"), token,
+		30*24*60*60, "/", beego.AppConfig.String("cookie.domain"), false, true)
+		c.Redirect("/", 302)
 	}
 }
