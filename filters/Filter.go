@@ -9,7 +9,7 @@ import (
 )
 
 func IsLogin(ctx *context.Context) (bool, models.User) {
-	token, flag := ctx.GetSecureCookie(beego.AppConfig.String("cooke.secure"), beego.AppConfig.String("cookie.token"))
+	token, flag := ctx.GetSecureCookie(beego.AppConfig.String("cookie.secure"), beego.AppConfig.String("cookie.token"))
 	var user models.User
 	if flag {
 		flag, user = models.FindUserByToken(token)

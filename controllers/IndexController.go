@@ -4,6 +4,7 @@ import (
 	"mybbs/filters"
 	"mybbs/models"
 	"strconv"
+	"fmt"
 
 	"github.com/astaxie/beego"
 	"github.com/sluu99/uuid"
@@ -18,6 +19,7 @@ type IndexController struct {
 func (c *IndexController) Index() {
 	c.Data["PageTitle"] = "首页"
 	c.Data["IsLogin"], c.Data["UserInfo"] = filters.IsLogin(c.Controller.Ctx)
+	fmt.Printf("%#v\n", c.Data["UserInfo"])
 	p, _ := strconv.Atoi(c.Ctx.Input.Query("p"))
 	if p == 0 {
 		p = 1
@@ -27,6 +29,7 @@ func (c *IndexController) Index() {
 	c.Data["S"] = s
 	section := models.Section{Id: s}
 	c.Data["Page"] = models.PageTopic(p, size, &section)
+	c.Data["Sections"] = models.FindAllSection()
 	c.Layout = "layout/layout.tpl"
 	c.TplName = "index.tpl"
 }

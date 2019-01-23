@@ -2,6 +2,7 @@ package routers
 
 import (
 	"mybbs/controllers"
+	"mybbs/filters"
 
 	"github.com/astaxie/beego"
 )
@@ -17,5 +18,7 @@ func init() {
 	beego.Router("/about", &controllers.IndexController{}, "GET:About")
 
 	beego.Router("/user/:username", &controllers.UserController{}, "GET:Detail")
-	beego.Router("/user/setting", &controllers.UserController{},"GET:ToSetting")
+	beego.Router("/user/setting", &controllers.UserController{}, "GET:ToSetting")
+	beego.InsertFilter("/user/setting", beego.BeforeRouter, filters.FilterUser)
+	beego.Router("/user/setting", &controllers.UserController{}, "POST:Setting")
 }
