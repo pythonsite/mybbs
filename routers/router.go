@@ -14,11 +14,13 @@ func init() {
 	beego.Router("/login", &controllers.IndexController{}, "POST:Login")
 	beego.Router("/register", &controllers.IndexController{}, "GET:RegisterPage")
 	beego.Router("/register", &controllers.IndexController{}, "POST:Register")
-	beego.Router("/about", &controllers.IndexController{}, "GET:Logout")
+	beego.Router("/logout", &controllers.IndexController{}, "GET:Logout")
 	beego.Router("/about", &controllers.IndexController{}, "GET:About")
 
 	beego.Router("/user/:username", &controllers.UserController{}, "GET:Detail")
 	beego.Router("/user/setting", &controllers.UserController{}, "GET:ToSetting")
 	beego.InsertFilter("/user/setting", beego.BeforeRouter, filters.FilterUser)
 	beego.Router("/user/setting", &controllers.UserController{}, "POST:Setting")
+	beego.Router("/user/updatepwd", &controllers.UserController{}, "POST:UpdatePwd")
+	beego.Router("/user/updateavatar", &controllers.UserController{}, "POST:UpdateAvatar")
 }

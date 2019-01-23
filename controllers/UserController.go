@@ -3,9 +3,11 @@ package controllers
 import (
 	"mybbs/filters"
 	"mybbs/models"
+	"net/http"
 	"regexp"
 
 	"github.com/astaxie/beego"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserController struct {
@@ -62,4 +64,55 @@ func (c *UserController) Setting() {
 	flash.Success("更新资料成功")
 	flash.Store(&c.Controller)
 	c.Redirect("/user/setting", 302)
+}
+
+func (c *UserController) UpdatePwd() {
+	flash := beego.NewFlash()
+	oldpwd, newpwd := c.Input().Get("oldpwd"), c.Input().Get("newpwd")
+	_, user := filters.IsLogin(c.Ctx)
+	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(oldpwd)) != nil {
+		flash.Error("旧密码不正确")
+		flash.Store(&c.Controller)
+		c.Redirect("/user/setting", 302)
+		return
+	}
+
+	if len(newpwd) == 0 {
+		flash.Error("新密码不能为空")
+		flash.Store(&c.Controller)
+		c.Redirect("/user/setting", 302)
+		return
+	}
+
+	bcryptNewPassword, _ := bcrypt.GenerateFromPassword([]byte(newpwd), bcrypt.DefaultCost)
+	user.Password = string(bcryptNewPassword)
+	models.UpdateUser(&user)
+	flash.Success("密码修改成功")
+	flash.Store(&c.Controller)
+	c.Redirect("/user/setting", 302)
+}
+
+func (c *UserController) UpdateAvatar() {
+	flash := beego.NewFlash()
+	f, h, err := c.GetFile("avatar")
+	if err == http.ErrMissingFile {
+		flash.Error("请选择文件")
+		flash.Store(&c.Controller)
+		c.Redirect("/user/setting", 302)
+	}
+	defer f.Close()
+	if err != nil {
+		flash.Error("上传头像失败")
+		flash.Store(&c.Controller)
+		c.Redirect("/user/setting", 302)
+		return
+	} else {
+		c.SaveToFile("avatar", "static/upload/avatar/"+h.Filename)
+		_, user := filters.IsLogin(c.Ctx)
+		user.Avatar = "/static/upload/avatar/" + h.Filename
+		models.UpdateUser(&user)
+		flash.Success("上传头像成功")
+		flash.Store(&c.Controller)
+		c.Redirect("/user/setting", 302)
+	}
 }
