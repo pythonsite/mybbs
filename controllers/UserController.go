@@ -1,9 +1,10 @@
 package controllers
 
 import (
-	"github.com/gogo/protobuf/test/cachedsize"
-	"github.com/astaxie/beego"
+	"mybbs/filters"
 	"mybbs/models"
+
+	"github.com/astaxie/beego"
 )
 
 type UserController struct {
@@ -17,5 +18,17 @@ func (c *UserController) Detail() {
 		c.Data["IsLogin"], c.Data["UserInfo"] = filters.IsLogin(c.Ctx)
 		c.Data["PageTitle"] = "个人主页"
 		c.Data["CurrentUserInfo"] = user
+		c.Data["Topics"] = models.FindTopicByUser(&user, 7)
+		c.Data["Replies"] = models.FindReplyByUser(&user, 7)
 	}
+	c.Layout = "layout/layout.tpl"
+	c.TplName = "user/detail.tpl"
+}
+
+func (c *UserController) ToSetting() {
+	beego.ReadFromRequest(&c.Controller)
+	c.Data["IsLogin"], c.Data["UserInfo"] = filters.IsLogin(c.Ctx)
+	c.Data["PageTitle"] = "用户设置"
+	c.Layout = "layout/layout.tpl"
+	c.TplName = "user/setting.tpl"
 }

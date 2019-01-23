@@ -1,11 +1,11 @@
 package models
 
 import (
-	"os/user"
-	"strconv"
-	"github.com/astaxie/beego/orm"
-	"time"
 	"mybbs/utils"
+	"strconv"
+	"time"
+
+	"github.com/astaxie/beego/orm"
 )
 
 type Topic struct {
@@ -22,7 +22,7 @@ type Topic struct {
 }
 
 func SaveTopic(topic *Topic) int64 {
-	o:= orm.NewOrm()
+	o := orm.NewOrm()
 	id, _ := o.Insert(topic)
 	return id
 }
@@ -43,9 +43,27 @@ func PageTopic(p int, size int, section *Section) utils.Page {
 		qs = qs.Filter("Section", section)
 	}
 	count, _ := qs.Limit(-1).Count()
-	qs.RelatedSel().OrderBy("InTime").Limit(size).Offset((p-1)*size).All(&list)
+	qs.RelatedSel().OrderBy("InTime").Limit(size).Offset((p - 1) * size).All(&list)
 	c, _ := strconv.Atoi(strconv.FormatInt(count, 10))
 	return utils.PageUtil(c, p, size, list)
+}
+
+func IncrView(topic *Topic) {
+	o := orm.NewOrm()
+	topic.View = topic.View + 1
+	o.Update(topic, "View")
+}
+
+func IncrReplyCount(topic *Topic) {
+	o := orm.NewOrm()
+	topic.ReplyCount = topic.ReplyCount + 1
+	o.Update(topic, "ReplyCount")
+}
+
+func ReduceReplyCount(topic *Topic) {
+	o := orm.NewOrm()
+	topic.ReplyCount = topic.ReplyCount - 1
+	o.Update(topic, "ReplyCount")
 }
 
 func FindTopicByUser(user *User, limit int) []*Topic {
@@ -54,5 +72,14 @@ func FindTopicByUser(user *User, limit int) []*Topic {
 	var topics []*Topic
 	o.QueryTable(topic).RelatedSel().Filter("User", user).OrderBy("-LastReplyTime", "-InTime").Limit(limit).All(&topics)
 	return topics
+}
 
+func UpdateTopic(topic *Topic) {
+	o := orm.NewOrm()
+	o.Delete(topic)
+}
+
+func DeleteTopicByUser(user *User) {
+	o := orm.NewOrm()
+	o.Raw("delete from topic where user_id = ?", user.Id).Exec()
 }
