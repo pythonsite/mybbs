@@ -28,4 +28,10 @@ func init() {
 	beego.Router("/user/edit/:id([0-9]+)", &controllers.UserController{}, "GET:Edit")
 	beego.Router("/user/edit/:id([0-9]+)", &controllers.UserController{}, "POST:Update")
 
+	beego.Router("/role/list", &controllers.RoleController{}, "GET:List")
+	beego.Router("/role/add", &controllers.RoleController{}, "GET:Add")
+	beego.Router("/role/add", &controllers.RoleController{}, "Post:Save")
+	beego.Router("/role/edit/:id([0-9]+)", &controllers.RoleController{}, "GET:Edit")
+	beego.Router("/role/edit/:id([0-9]+)", &controllers.RoleController{}, "Post:Update")
+	beego.Router("/role/delete/:id([0-9]+)", &controllers.RoleController{}, "GET:Delete")
 }
