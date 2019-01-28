@@ -5,6 +5,7 @@ import (
 	"mybbs/models"
 	"net/http"
 	"regexp"
+	"strconv"
 
 	"github.com/astaxie/beego"
 	"golang.org/x/crypto/bcrypt"
@@ -115,4 +116,69 @@ func (c *UserController) UpdateAvatar() {
 		flash.Store(&c.Controller)
 		c.Redirect("/user/setting", 302)
 	}
+}
+
+func (c *UserController) List() {
+	c.Data["PageTitle"] = "用户列表"
+	c.Data["IsLogin"], c.Data["UserInfo"] = filters.IsLogin(c.Ctx)
+	p, _ := strconv.Atoi(c.Ctx.Input.Query("p"))
+	if p == 0 {
+		p = 1
+	}
+	size, _ := beego.AppConfig.Int("page.size")
+	c.Data["Page"] = models.PageUser(p, size)
+	c.Layout = "layout/layout.tpl"
+	c.TplName = "user/list.tpl"
+}
+
+func (c *UserController) Delete() {
+	id, _ := strconv.Atoi(c.Ctx.Input.Param(":id"))
+	if id > 0 {
+		ok, user := models.FindUserById(id)
+		if ok {
+			models.DeleteTopicByUser(&user)
+			models.DeleteUser(&user)
+		}
+		c.Redirect("/user/list", 302)
+	} else {
+		c.Ctx.WriteString("用户不存在")
+	}
+}
+
+func (c *UserController) Edit() {
+	c.Data["PageTitle"] = "配置角色"
+	c.Data["IsLogin"], c.Data["UserInfo"] = filters.IsLogin(c.Ctx)
+	id, _ := strconv.Atoi(c.Ctx.Input.Param(":id"))
+	if id > 0 {
+		ok, user := models.FindUserById(id)
+		if ok {
+			c.Data["User"] = user
+			c.Data["Roles"] = models.FindRoles()
+			c.Data["UserRoles"] = models.FindUserRolesByUserId(id)
+			c.Layout = "layout/layout.tpl"
+			c.TplName = "user/edit.tpl"
+			  
+		} else {
+			c.Ctx.WriteString("用户不存在")
+		}
+	} else{
+		c.Ctx.WriteString("用户不存在")
+	}
+}
+
+func (c *UserController) Update() {
+  c.Data["PageTitle"] = "配置角色"
+  c.Data["IsLogin"], c.Data["UserInfo"] = filters.IsLogin(c.Ctx)
+  id, _ := strconv.Atoi(c.Ctx.Input.Param(":id"))
+  roleIds := c.GetStrings("roleIds")
+  if id > 0 {
+    models.DeleteUserRolesByUserId(id)
+    for _, v := range roleIds {
+      roleId, _ := strconv.Atoi(v)
+      models.SaveUserRole(id, roleId)
+    }
+    c.Redirect("/user/list", 302)
+  } else {
+    c.Ctx.WriteString("用户不存在")
+  }
 }

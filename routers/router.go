@@ -23,4 +23,9 @@ func init() {
 	beego.Router("/user/setting", &controllers.UserController{}, "POST:Setting")
 	beego.Router("/user/updatepwd", &controllers.UserController{}, "POST:UpdatePwd")
 	beego.Router("/user/updateavatar", &controllers.UserController{}, "POST:UpdateAvatar")
+	beego.Router("/user/list", &controllers.UserController{}, "GET:List")
+	beego.Router("/user/delete/:id([0-9]+)", &controllers.UserController{}, "GET:Delete")
+	beego.Router("/user/edit/:id([0-9]+)", &controllers.UserController{}, "GET:Edit")
+	beego.Router("/user/edit/:id([0-9]+)", &controllers.UserController{}, "POST:Update")
+
 }
