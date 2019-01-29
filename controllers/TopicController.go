@@ -58,3 +58,43 @@ func (c *TopicController) Detail() {
 		c.Ctx.WriteString("话题不存在")
 	}
 }
+
+func (c *TopicController) Edit() {
+	beego.ReadFromRequest(&c.Controller)
+	id, _ := strconv.Atoi(c.Ctx.Input.Param(":id"))
+	if id > 0 {
+		topic := models.FindTopicById(id)
+		c.Data["IsLogin"], c.Data["UserInfo"] = filters.IsLogin(c.Controller.Ctx)
+		c.Data["PageTitle"] = "编辑话题"
+		c.Data["Sections"] = models.FindAllSection()
+		c.Data["Topic"] = topic
+		c.Layout = "layout/layout.tpl"
+		c.TplName = "topic/edit.tpl"
+	} else {
+		c.Ctx.WriteString("话题不存在")
+	}
+}
+
+func (c *TopicController) Update() {
+	flash := beego.NewFlash()
+	id, _ := strconv.Atoi(c.Ctx.Input.Param(":id"))
+	title, content, sid := c.Input().Get("title"), c.Input().Get("content"), c.Input().Get("sid")
+	if len(title) == 0 || len(title) > 120 {
+		flash.Error("话题标题不能为空且不能超过120个字符")
+		flash.Store(&c.Controller)
+		c.Redirect("/topic/edit/"+strconv.Itoa(id), 302)
+	} else if len(sid) == 0 {
+		flash.Error("请选择话题版块")
+		flash.Store(&c.Controller)
+		c.Redirect("/topic/edit/"+strconv.Itoa(id), 302)
+	} else {
+		s, _ := strconv.Atoi(sid)
+		section := models.Section{Id: s}
+		topic := models.FindTopicById(id)
+		topic.Title = title
+		topic.Content = content
+		topic.Section = &section
+		models.UpdateTopic(&topic)
+		c.Redirect("/topic/"+strconv.Itoa(id), 302)
+	}
+}

@@ -17,10 +17,11 @@ func init() {
 	beego.Router("/logout", &controllers.IndexController{}, "GET:Logout")
 	beego.Router("/about", &controllers.IndexController{}, "GET:About")
 
-	beego.Router("/topic/create", &controllers.TopicController{}, "GET:Create")	
+	beego.Router("/topic/create", &controllers.TopicController{}, "GET:Create")
 	beego.Router("/topic/create", &controllers.TopicController{}, "POST:Save")
 	beego.Router("/topic/:id([0-9]+)", &controllers.TopicController{}, "GET:Detail")
-
+	beego.Router("/topic/edit/:id([0-9]+)", &controllers.TopicController{}, "GET:Edit")
+	beego.Router("/topic/edit/:id([0-9]+)", &controllers.TopicController{}, "POST:Update")
 
 	beego.Router("/user/:username", &controllers.UserController{}, "GET:Detail")
 	beego.Router("/user/setting", &controllers.UserController{}, "GET:ToSetting")

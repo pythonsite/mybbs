@@ -76,6 +76,11 @@ func FindTopicByUser(user *User, limit int) []*Topic {
 
 func UpdateTopic(topic *Topic) {
 	o := orm.NewOrm()
+	o.Update(topic)
+}
+
+func DeleteTopic(topic *Topic) {
+	o := orm.NewOrm()
 	o.Delete(topic)
 }
 
