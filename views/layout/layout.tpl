@@ -23,7 +23,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" style="color:#fff;" href="/">朋也社区GO</a>
+        <a class="navbar-brand" style="color:#fff;" href="/">SYSITE</a>
       </div>
       <div id="navbar" class="navbar-collapse collapse header-navbar">
         <ul class="nav navbar-nav navbar-right">

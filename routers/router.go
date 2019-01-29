@@ -17,6 +17,11 @@ func init() {
 	beego.Router("/logout", &controllers.IndexController{}, "GET:Logout")
 	beego.Router("/about", &controllers.IndexController{}, "GET:About")
 
+	beego.Router("/topic/create", &controllers.TopicController{}, "GET:Create")	
+	beego.Router("/topic/create", &controllers.TopicController{}, "POST:Save")
+	beego.Router("/topic/:id([0-9]+)", &controllers.TopicController{}, "GET:Detail")
+
+
 	beego.Router("/user/:username", &controllers.UserController{}, "GET:Detail")
 	beego.Router("/user/setting", &controllers.UserController{}, "GET:ToSetting")
 	beego.InsertFilter("/user/setting", beego.BeforeRouter, filters.FilterUser)
@@ -30,15 +35,15 @@ func init() {
 
 	beego.Router("/role/list", &controllers.RoleController{}, "GET:List")
 	beego.Router("/role/add", &controllers.RoleController{}, "GET:Add")
-	beego.Router("/role/add", &controllers.RoleController{}, "Post:Save")
+	beego.Router("/role/add", &controllers.RoleController{}, "POST:Save")
 	beego.Router("/role/edit/:id([0-9]+)", &controllers.RoleController{}, "GET:Edit")
-	beego.Router("/role/edit/:id([0-9]+)", &controllers.RoleController{}, "Post:Update")
+	beego.Router("/role/edit/:id([0-9]+)", &controllers.RoleController{}, "POST:Update")
 	beego.Router("/role/delete/:id([0-9]+)", &controllers.RoleController{}, "GET:Delete")
 
 	beego.Router("/permission/list", &controllers.PermissionController{}, "GET:List")
 	beego.Router("/permission/add", &controllers.PermissionController{}, "GET:Add")
 	beego.Router("/permission/add", &controllers.PermissionController{}, "POST:Save")
 	beego.Router("/permission/edit/:id([0-9]+)", &controllers.PermissionController{}, "GET:Edit")
-	beego.Router("/permission/edit/:id([0-9]+)", &controllers.PermissionController{}, "Post:Update")
+	beego.Router("/permission/edit/:id([0-9]+)", &controllers.PermissionController{}, "POST:Update")
 	beego.Router("/permission/delete/:id([0-9]+)", &controllers.PermissionController{}, "GET:Delete")
 }
