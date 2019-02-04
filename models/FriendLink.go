@@ -18,3 +18,14 @@ func FindAllFriendLink() []*FriendLink {
 	o.QueryTable(friendLink).All(&friendLinks)
 	return friendLinks
 }
+
+func SaveLink(friendlink *FriendLink) int64 {
+	o := orm.NewOrm()
+	id, _ := o.Insert(friendlink)
+	return id
+}
+
+func DeleteFriendLinkById(id int) {
+	o := orm.NewOrm()
+	o.Raw("delete from friend_link where id=?", id).Exec()
+}

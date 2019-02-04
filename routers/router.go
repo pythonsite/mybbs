@@ -49,4 +49,7 @@ func init() {
 	beego.Router("/permission/delete/:id([0-9]+)", &controllers.PermissionController{}, "GET:Delete")
 
 	beego.Router("/link/list", &controllers.LinkController{}, "GET:List")
+	beego.Router("/link/add", &controllers.LinkController{}, "GET:Add")
+	beego.Router("/link/add", &controllers.LinkController{}, "POST:Save")
+	beego.Router("/link/delete/:id([0-9]+)", &controllers.LinkController{}, "GET:Delete")
 }
