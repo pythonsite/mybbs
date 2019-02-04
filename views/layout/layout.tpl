@@ -48,6 +48,7 @@
               {{if haspermission .UserInfo.Id "user:list"}}<li><a href="/user/list">用户管理</a></li>{{end}}
               {{if haspermission .UserInfo.Id "role:list"}}<li><a href="/role/list">角色管理</a></li>{{end}}
               {{if haspermission .UserInfo.Id "permission:list"}}<li><a href="/permission/list">权限管理</a></li>{{end}}
+              {{if haspermission .UserInfo.Id "link:list"}}<li><a href="/link/list">友链管理</a></li>{{end}}
               <li><a href="/logout">退出</a></li>
             </ul>
           </li>
@@ -66,7 +67,7 @@
 <div class="container">
   <br>
   <div class="text-center">
-    ©2016 Powered by <a href="https://bbs.tomoya.cn" target="_blank">朋也社区</a>
+    ©2019 Powered by <a href="https://sysite.cn" target="_blank">SYSITE</a>
   </div>
   <br>
 </div>
