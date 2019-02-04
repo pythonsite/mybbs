@@ -15,7 +15,7 @@ func init() {
 	port := beego.AppConfig.String("jdbc.port")
 	username := beego.AppConfig.String("jdbc.username")
 	password := beego.AppConfig.String("jdbc.password")
-	orm.RegisterDataBase("default", "mysql", username+":"+password+"@tcp("+url+":"+port+")/pybbs-go?charset=utf8&parseTime=true&charset=utf8", 30)
+	orm.RegisterDataBase("default", "mysql", username+":"+password+"@tcp("+url+":"+port+")/bbs?charset=utf8&parseTime=true&charset=utf8", 30)
 	orm.RegisterModel(
 		new(models.User),
 		new(models.Topic),
@@ -24,6 +24,7 @@ func init() {
 		new(models.ReplyUpLog),
 		new(models.Role),
 		new(models.Permission),
+		new(models.FriendLink),
 	)
 	orm.RunSyncdb("default", false, true)
 }

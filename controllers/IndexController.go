@@ -30,6 +30,8 @@ func (c *IndexController) Index() {
 	section := models.Section{Id: s}
 	c.Data["Page"] = models.PageTopic(p, size, &section)
 	c.Data["Sections"] = models.FindAllSection()
+	c.Data["FriendLinks"] = models.FindAllFriendLink()
+	fmt.Println(c.Data["FriendLinks"])
 	c.Layout = "layout/layout.tpl"
 	c.TplName = "index.tpl"
 }

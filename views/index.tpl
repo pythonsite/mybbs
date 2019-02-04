@@ -49,7 +49,17 @@
     {{else}}
       {{template "components/welcome.tpl" .}}
     {{end}}
-    {{template "components/otherbbs.tpl" .}}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        友链
+      </div>
+    <div class="panel-body">
+      {{range .FriendLinks}}
+        <a href={{.LinkUrl}} target="_blank">{{.LinkName}}</a>
+        <!--<div class="divide pad-bot-10"></div>-->
+      {{end}}
+  </div>
+</div>
   </div>
 </div>
 <script type="text/javascript" src="/static/js/bootstrap-paginator.min.js"></script>
