@@ -14,6 +14,7 @@
             <td>{{.LinkName}}</td>
             <td>{{.LinkUrl}}</td>
             <td>
+              <a href="/link/edit/{{.Id}}" class="btn btn-xs btn-warning">编辑</a>
               <a href="javascript:if(confirm('确认删除吗?')) location.href='/link/delete/{{.Id}}'" class="btn btn-xs btn-danger">删除</a>
             </td>
           </tr>

@@ -29,3 +29,15 @@ func DeleteFriendLinkById(id int) {
 	o := orm.NewOrm()
 	o.Raw("delete from friend_link where id=?", id).Exec()
 }
+
+func FindFriendLinkById(id int) FriendLink {
+	o := orm.NewOrm()
+	var friendlink FriendLink
+	o.QueryTable(friendlink).Filter("Id", id).One(&friendlink)
+	return friendlink
+}
+
+func UpdateFriendLink(friendlink *FriendLink) {
+	o := orm.NewOrm()
+	o.Update(friendlink)
+}

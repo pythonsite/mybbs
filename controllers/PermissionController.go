@@ -70,7 +70,7 @@ func (c *PermissionController) Edit() {
 
 func (c *PermissionController) Update() {
 	flash := beego.NewFlash()
-	id, _ := strconv.Atoi(c.Ctx.Input.Param("id"))
+	id, _ := strconv.Atoi(c.Ctx.Input.Param(":id"))
 	pid, _ := strconv.Atoi(c.Input().Get("pid"))
 	name, url, description := c.Input().Get("name"), c.Input().Get("url"), c.Input().Get("description")
 	if pid > 0 && len(name) == 0 {

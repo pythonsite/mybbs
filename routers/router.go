@@ -52,4 +52,6 @@ func init() {
 	beego.Router("/link/add", &controllers.LinkController{}, "GET:Add")
 	beego.Router("/link/add", &controllers.LinkController{}, "POST:Save")
 	beego.Router("/link/delete/:id([0-9]+)", &controllers.LinkController{}, "GET:Delete")
+	beego.Router("link/edit/:id([0-9]+)", &controllers.LinkController{}, "GET:Edit")
+	beego.Router("link/edit/:id([0-9]+)", &controllers.LinkController{}, "POST:Update")
 }
