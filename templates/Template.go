@@ -15,7 +15,7 @@ func FormatTime(time time.Time) string {
 }
 
 func MarkDown(content string) string {
-	return string(blackfriday.MarkdownCommon([]byte(utils.NoHtml(content))))
+	return string(blackfriday.Run([]byte(utils.NoHtml(content))))
 }
 
 func HasPermission(userId int, name string) bool {
